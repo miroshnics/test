@@ -8,14 +8,12 @@ try {
 	die($e->getMessage());
 }
 
-// SELECT * FROM INFORMATION_SCHEMA.TABLES
-// SHOW TABLES;
-
+$output = array();
 
 $stmt = $link->query("SHOW TABLES;");
 while ($row = $stmt->fetch())
 {
-  //echo '<pre>';
-  echo '<br>';
-  print_r($row);
+  $output[] = $row[0];
 }
+header('Content-Type: application/json');
+echo json_encode($output);
