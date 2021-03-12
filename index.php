@@ -14,14 +14,29 @@
     <div id="welcome"></div>
 
 
+    <label for="tbl-select">Выберите отображаемую таблицу:</label>
     <div class="input-group">
-      <select class="custom-select" id="tbl-select" aria-label="Выберите таблицу">
+      <select class="custom-select" name="tbl-select" id="tbl-select" aria-label="Выберите таблицу">
         <option selected>Выберите таблицу</option>
       </select>
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button">Обновить</button>
+        <button class="btn btn-outline-secondary" id="tbl-show" type="button">Показать</button>
       </div>
     </div>
+
+    <table class="table table-hover mt-5 d-none" id="main-tbl">
+      <thead class="thead-dark">
+        <tr id="thead-row">
+          <th scope="col">#</th>
+          <th scope="col">First</th>
+          <th scope="col">Last</th>
+          <th scope="col">Handle</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
 
   </div>
 

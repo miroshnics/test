@@ -13,7 +13,7 @@ $output = array();
 $stmt = $link->query("SHOW TABLES;");
 while ($row = $stmt->fetch())
 {
-  $output[] = $row[0];
+	$output[] = $row[0];
 }
 header('Content-Type: application/json');
 echo json_encode($output);
