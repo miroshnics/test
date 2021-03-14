@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
   <title>Тестовое задание</title>
 </head>
 <body>
-  <?php  require 'header.php'; ?>
+  <?php  require 'view\header.php'; ?>
   <div class="container">
     <div id="welcome"></div>
 
@@ -40,13 +40,13 @@
     <button type="button" id="new-btn" class="btn btn-primary d-none" data-toggle="modal" data-target="#newModal">Добавить новую запись</button>
 
 
-    <?php require 'editModal.php' ?>
-    <?php require 'newModal.php' ?>
-    <?php require 'readmeModal.php' ?>
-    <?php require 'optimizeModal.php' ?>
+    <?php require 'view\editModal.php' ?>
+    <?php require 'view\newModal.php' ?>
+    <?php require 'view\readmeModal.php' ?>
+    <?php require 'view\optimizeModal.php' ?>
 
   </div>
-  <script src="func.js" type="text/javascript"></script>
+  <script src="func.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 </body>
