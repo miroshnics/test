@@ -18,6 +18,8 @@ window.addEventListener("load",function() {
       json.forEach((item, i) => {
         tbl_select.innerHTML += "<option value=\"" + item + "\">" + item + "</option>";
       });
+
+
     }
   });
 });
@@ -32,6 +34,7 @@ document.getElementById('tbl-show').addEventListener("click",function() {
   document.getElementById('new-btn').classList.remove("d-none");
   // Очистка массива
   headers.length = 0;
+  values.length = 0;
 
   $.ajax({
     url: 'get_table_content.php?tbl=' + tbl_select.value,
@@ -61,11 +64,13 @@ document.getElementById('tbl-show').addEventListener("click",function() {
         item = json.slice(1)[i];
         var row = document.createElement("TR");
         tbody.appendChild(row);
+        values.push(new Array());
         for (let j = 0; j < headers.length; j++) {
           var td = document.createElement("TD");
           row.appendChild(td);
           td.innerHTML = item[headers[j]];
-          values.push(item[headers[j]]);
+          //values.push(item[headers[j]]);
+          values[i].push(item[headers[j]]);
         }
         // Кнопки редактирования и удаления
         var td_edit_del = document.createElement("TD");
@@ -79,18 +84,13 @@ document.getElementById('tbl-show').addEventListener("click",function() {
         edit_btn.setAttribute("data-target", "#editModal");
         edit_btn.innerHTML = "Редактировать";
 
-        for (var k = 0; k < headers.length; k++) {
-          edit_btn.setAttribute("data-"+headers[k], values[k]);
-        }
+        edit_btn.setAttribute("data-id", i);
 
         var del_btn = document.createElement("BUTTON");
         td_edit_del.appendChild(del_btn);
         del_btn.classList.add("btn", "btn-outline-danger");
         del_btn.setAttribute("type", "button");
         del_btn.innerHTML = "Удалить";
-
-        // Очистить список значений
-        values.length = 0;
       }
     }
   });
@@ -118,7 +118,8 @@ $('#editModal').on('show.bs.modal', function (event) {
     form_group.appendChild(input);
     input.classList.add("form-control");
     input.setAttribute("id", headers[k]);
-    input.value = button.data(headers[k]);
+    //input.value = button.data(headers[k]);
+    input.value = values[button.data("id")][k];
   }
 })
 
@@ -143,6 +144,5 @@ $('#newModal').on('show.bs.modal', function (event) {
     form_group.appendChild(input);
     input.classList.add("form-control");
     input.setAttribute("id", headers[k]);
-    //input.value = button.data(headers[k]);
   }
 })
