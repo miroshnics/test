@@ -18,47 +18,51 @@ window.addEventListener("load",function() {
   });
 });
 
+
+
 document.getElementById('tbl-show').addEventListener("click",function() {
   var tbl_select = document.getElementById('tbl-select');
   var main_tbl = document.getElementById('main-tbl');
   var welcome = document.getElementById('welcome');
 
+  let headers = new Array();
+
   main_tbl.classList.remove("d-none");
-  alert(tbl_select.value);
 
   $.ajax({
-    url: 'get_table_content.php?tbl=' + tbl_select.value + "&data=head",
+    url: 'get_table_content.php?tbl=' + tbl_select.value + "&data=all",
     type: 'GET',
     method: 'GET',
     dataType: 'json',
     success: function(json){
 
-      var thead_row = main_tbl.children[0].children[0]
-      console.log(thead_row);
+      // Вывод заголовков таблицы
+      var thead_row = main_tbl.children[0].children[0];
 
       thead_row.innerHTML = "";
 
-      json.forEach((col_head) => {
+      json[0].forEach((col_head) => {
         thead_row.innerHTML += "<th scope=\"col\">" + col_head + "</th>";
+        headers.push(col_head);
       });
-    }
-  });
 
-  $.ajax({
-    url: 'get_table_content.php?tbl=' + tbl_select.value + "&data=content",
-    type: 'GET',
-    method: 'GET',
-    dataType: 'json',
-    success: function(json){
 
       var tbody = main_tbl.children[1];
-      console.log(tbody);
-
       tbody.innerHTML = "";
-
-      /*json.forEach((item, i) => {
-        thead_row.innerHTML += "<th scope=\"col\">" + item + "</th>";
-      });*/
+      // Вывод контента таблицы
+      console.log(json);
+      console.log(headers);
+      for (let i = 0; i < json.slice(1).length; i++) {
+        // Выводим таблицу
+        item = json.slice(1)[i];
+        var row = document.createElement("TR");
+        tbody.appendChild(row);
+        for (let j = 0; j < headers.length; j++) {
+          var td = document.createElement("TD");
+          row.appendChild(td);
+          td.innerHTML = item[headers[j]];
+        }
+      }
     }
   });
 });

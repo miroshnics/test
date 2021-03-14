@@ -9,23 +9,45 @@ try {
 }
 
 $output = array();
-
+/*
 if ($_GET['data'] == 'head') {
-  $stmt = $link->query("SHOW COLUMNS FROM ".$_GET['tbl']);
+  header('Content-Type: application/json');
+  $stmt = $link->query("SHOW COLUMNS FROM " . $_GET['tbl']);
   while ($row = $stmt->fetch())
   {
     $output[] = $row[0];
   }
-  header('Content-Type: application/json');
   echo json_encode($output);
+  exit;
 }
 
-if ($_GET['data'] == 'content') {
-  $stmt = $link->query("SELECT * FROM ".$_GET['tbl']);
+else if ($_GET['data'] == 'content') {
+  $stmt = $link->query("SELECT * FROM " . $_GET['tbl']);
   while ($row = $stmt->fetch())
   {
-    $output[] = $row[0];
+    $output[] = $row;
   }
-  header('Content-Type: application/json');
   echo json_encode($output);
+  exit;
+}
+
+
+
+else */if ($_GET['data'] == 'all') {
+  header('Content-Type: application/json');
+
+  $stmt = $link->query("SHOW COLUMNS FROM " . $_GET['tbl']);
+  while ($row = $stmt->fetch())
+  {
+    $output[0][] = $row[0];
+  }
+
+  $stmt = $link->query("SELECT * FROM " . $_GET['tbl']);
+  while ($row = $stmt->fetch(PDO::FETCH_OBJ))
+  {
+    $output[] = $row;
+  }
+
+  echo json_encode($output);
+  exit;
 }
