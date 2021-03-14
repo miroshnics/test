@@ -9,45 +9,20 @@ try {
 }
 
 $output = array();
-/*
-if ($_GET['data'] == 'head') {
-  header('Content-Type: application/json');
-  $stmt = $link->query("SHOW COLUMNS FROM " . $_GET['tbl']);
-  while ($row = $stmt->fetch())
-  {
-    $output[] = $row[0];
-  }
-  echo json_encode($output);
-  exit;
+
+header('Content-Type: application/json');
+
+$stmt = $link->query("SHOW COLUMNS FROM " . $_GET['tbl']);
+while ($row = $stmt->fetch())
+{
+  $output[0][] = $row[0];
 }
 
-else if ($_GET['data'] == 'content') {
-  $stmt = $link->query("SELECT * FROM " . $_GET['tbl']);
-  while ($row = $stmt->fetch())
-  {
-    $output[] = $row;
-  }
-  echo json_encode($output);
-  exit;
+$stmt = $link->query("SELECT * FROM " . $_GET['tbl']);
+while ($row = $stmt->fetch(PDO::FETCH_OBJ))
+{
+  $output[] = $row;
 }
 
-
-
-else */if ($_GET['data'] == 'all') {
-  header('Content-Type: application/json');
-
-  $stmt = $link->query("SHOW COLUMNS FROM " . $_GET['tbl']);
-  while ($row = $stmt->fetch())
-  {
-    $output[0][] = $row[0];
-  }
-
-  $stmt = $link->query("SELECT * FROM " . $_GET['tbl']);
-  while ($row = $stmt->fetch(PDO::FETCH_OBJ))
-  {
-    $output[] = $row;
-  }
-
-  echo json_encode($output);
-  exit;
-}
+echo json_encode($output);
+exit;
