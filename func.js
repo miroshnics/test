@@ -1,5 +1,6 @@
 
 var headers = new Array();
+var values = new Array();
 
 // Загрузка списка таблиц выбранной БД
 window.addEventListener("load",function() {
@@ -28,6 +29,7 @@ document.getElementById('tbl-show').addEventListener("click",function() {
   var welcome = document.getElementById('welcome');
 
   main_tbl.classList.remove("d-none");
+  document.getElementById('new-btn').classList.remove("d-none");
   // Очистка массива
   headers.length = 0;
 
@@ -47,7 +49,7 @@ document.getElementById('tbl-show').addEventListener("click",function() {
         th.innerHTML = col_head;
         headers.push(col_head);
       });
-      // Кнопки редактирования и удаления
+      // Последняя графа таблицы для кнопок редактирования и удаления
       var th_edit_del = document.createElement("TH");
       thead_row.appendChild(th_edit_del);
       th_edit_del.innerHTML = "Редактировать/Удалить";
@@ -63,25 +65,84 @@ document.getElementById('tbl-show').addEventListener("click",function() {
           var td = document.createElement("TD");
           row.appendChild(td);
           td.innerHTML = item[headers[j]];
+          values.push(item[headers[j]]);
         }
+        // Кнопки редактирования и удаления
         var td_edit_del = document.createElement("TD");
         row.appendChild(td_edit_del);
-        td_edit_del.innerHTML = "<button type=\"button\" class=\"btn btn-outline-primary mr-2\" data-target=\"#editModal\">Редактировать</button><button type=\"button\" class=\"btn btn-outline-danger\">Удалить</button>";
+
+        var edit_btn = document.createElement("BUTTON");
+        td_edit_del.appendChild(edit_btn);
+        edit_btn.classList.add("btn", "btn-outline-primary", "mr-2");
+        edit_btn.setAttribute("type", "button");
+        edit_btn.setAttribute("data-toggle", "modal");
+        edit_btn.setAttribute("data-target", "#editModal");
+        edit_btn.innerHTML = "Редактировать";
+
+        for (var k = 0; k < headers.length; k++) {
+          edit_btn.setAttribute("data-"+headers[k], values[k]);
+        }
+
+        var del_btn = document.createElement("BUTTON");
+        td_edit_del.appendChild(del_btn);
+        del_btn.classList.add("btn", "btn-outline-danger");
+        del_btn.setAttribute("type", "button");
+        del_btn.innerHTML = "Удалить";
+
+        // Очистить список значений
+        values.length = 0;
       }
     }
   });
 });
 
-$('#editModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget); // Button that triggered the modal
-  var recipient = button.data('whatever'); // Extract info from data-* attributes
-  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-  var modal = $(this);
-  //modal.find('.modal-title').text('New message to ' + recipient)
-  modal.find('.modal-body input').val(recipient);
 
-  for (let j = 0; j < headers.length; j++) {
-    var td_edit = document.createElement("TD");
+$('#editModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget);
+
+  var edit_form = document.getElementById('edit-form');
+  edit_form.innerHTML = "";
+
+  for (var k = 0; k < headers.length; k++) {
+    var form_group = document.createElement("DIV");
+    var label = document.createElement("LABEL");
+    var input = document.createElement("INPUT");
+
+    edit_form.appendChild(form_group);
+    form_group.classList.add("form-group");
+
+    form_group.appendChild(label);
+    label.setAttribute("for", headers[k]);
+    label.innerHTML = headers[k];
+
+    form_group.appendChild(input);
+    input.classList.add("form-control");
+    input.setAttribute("id", headers[k]);
+    input.value = button.data(headers[k]);
+  }
+})
+
+$('#newModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget);
+
+  var new_form = document.getElementById('new-form');
+  new_form.innerHTML = "";
+
+  for (var k = 0; k < headers.length; k++) {
+    var form_group = document.createElement("DIV");
+    var label = document.createElement("LABEL");
+    var input = document.createElement("INPUT");
+
+    new_form.appendChild(form_group);
+    form_group.classList.add("form-group");
+
+    form_group.appendChild(label);
+    label.setAttribute("for", headers[k]);
+    label.innerHTML = headers[k];
+
+    form_group.appendChild(input);
+    input.classList.add("form-control");
+    input.setAttribute("id", headers[k]);
+    //input.value = button.data(headers[k]);
   }
 })
