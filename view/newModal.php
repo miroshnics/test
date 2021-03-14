@@ -1,4 +1,3 @@
-<!-- Modal Edit -->
 <div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -15,7 +14,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-        <button type="button" class="btn btn-primary">Добавить</button>
+        <button type="submit" form="new-form" class="btn btn-primary">Добавить</button>
       </div>
     </div>
   </div>

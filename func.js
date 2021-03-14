@@ -18,8 +18,6 @@ window.addEventListener("load",function() {
       json.forEach((item, i) => {
         tbl_select.innerHTML += "<option value=\"" + item + "\">" + item + "</option>";
       });
-
-
     }
   });
 });
@@ -60,16 +58,19 @@ document.getElementById('tbl-show').addEventListener("click",function() {
       // Вывод контента таблицы
       var tbody = main_tbl.children[1];
       tbody.innerHTML = "";
+
+      // построчно <tr>
       for (let i = 0; i < json.slice(1).length; i++) {
         item = json.slice(1)[i];
         var row = document.createElement("TR");
         tbody.appendChild(row);
         values.push(new Array());
+
+        // поэлементно <td>
         for (let j = 0; j < headers.length; j++) {
           var td = document.createElement("TD");
           row.appendChild(td);
           td.innerHTML = item[headers[j]];
-          //values.push(item[headers[j]]);
           values[i].push(item[headers[j]]);
         }
         // Кнопки редактирования и удаления
@@ -83,7 +84,6 @@ document.getElementById('tbl-show').addEventListener("click",function() {
         edit_btn.setAttribute("data-toggle", "modal");
         edit_btn.setAttribute("data-target", "#editModal");
         edit_btn.innerHTML = "Редактировать";
-
         edit_btn.setAttribute("data-id", i);
 
         var del_btn = document.createElement("BUTTON");
@@ -103,6 +103,12 @@ $('#editModal').on('show.bs.modal', function (event) {
   var edit_form = document.getElementById('edit-form');
   edit_form.innerHTML = "";
 
+  var hidden = document.createElement("INPUT");
+  new_form.appendChild(hidden);
+  hidden.setAttribute("type", "hidden");
+  hidden.setAttribute("name", "db_table");
+  hidden.value = tbl_select.value;
+
   for (var k = 0; k < headers.length; k++) {
     var form_group = document.createElement("DIV");
     var label = document.createElement("LABEL");
@@ -118,16 +124,22 @@ $('#editModal').on('show.bs.modal', function (event) {
     form_group.appendChild(input);
     input.classList.add("form-control");
     input.setAttribute("id", headers[k]);
-    //input.value = button.data(headers[k]);
     input.value = values[button.data("id")][k];
   }
 })
 
 $('#newModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
+  var tbl_select = document.getElementById('tbl-select');
 
   var new_form = document.getElementById('new-form');
   new_form.innerHTML = "";
+
+  var hidden = document.createElement("INPUT");
+  new_form.appendChild(hidden);
+  hidden.setAttribute("type", "hidden");
+  hidden.setAttribute("name", "db_table");
+  hidden.value = tbl_select.value;
 
   for (var k = 0; k < headers.length; k++) {
     var form_group = document.createElement("DIV");
