@@ -104,7 +104,7 @@ $('#editModal').on('show.bs.modal', function (event) {
   edit_form.innerHTML = "";
 
   var hidden = document.createElement("INPUT");
-  new_form.appendChild(hidden);
+  edit_form.appendChild(hidden);
   hidden.setAttribute("type", "hidden");
   hidden.setAttribute("name", "db_table");
   hidden.value = tbl_select.value;
