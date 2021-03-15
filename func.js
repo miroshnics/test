@@ -99,6 +99,7 @@ document.getElementById('tbl-show').addEventListener("click",function() {
 
 $('#editModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
+  var tbl_select = document.getElementById('tbl-select');
 
   var edit_form = document.getElementById('edit-form');
   edit_form.innerHTML = "";
