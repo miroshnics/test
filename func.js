@@ -1,10 +1,12 @@
+var tbl_select = document.getElementById('tbl-select');
+var main_tbl = document.getElementById('main-tbl');
+var welcome = document.getElementById('welcome');
 
 var headers = new Array();
 var values = new Array();
 
 // Загрузка списка таблиц выбранной БД
 window.addEventListener("load",function() {
-
   var tbl_select = document.getElementById('tbl-select');
 
   $.ajax({
@@ -24,23 +26,25 @@ window.addEventListener("load",function() {
 
 
 document.getElementById('tbl-show').addEventListener("click",function() {
-  var tbl_select = document.getElementById('tbl-select');
-  var main_tbl = document.getElementById('main-tbl');
-  var welcome = document.getElementById('welcome');
-
   main_tbl.classList.remove("d-none");
   document.getElementById('new-btn').classList.remove("d-none");
   // Очистка массива
   headers.length = 0;
   values.length = 0;
 
+  get_table_content();
+});
+
+
+function get_table_content() {
+  headers.length = 0;
+  values.length = 0;
   $.ajax({
     url: 'get_table_content.php?tbl=' + tbl_select.value,
     type: 'GET',
     method: 'GET',
     dataType: 'json',
     success: function(json){
-
       // Вывод заголовков таблицы
       var thead_row = main_tbl.children[0].children[0];
       thead_row.innerHTML = "";
@@ -94,21 +98,52 @@ document.getElementById('tbl-show').addEventListener("click",function() {
       }
     }
   });
+}
+
+
+document.getElementById('edit-form').addEventListener("submit",function() {
+  $.ajax({
+    url: "update.php",
+    type: 'POST',
+    method: 'POST',
+    data: $("#edit-form").serialize(),  // Сериализуем объект
+    dataType: 'text',
+    //dataType: 'json',
+    success: function(json){
+      console.log("success!");
+      console.log(json);
+      get_table_content();
+    },
+    error: function(json){
+      console.log("error!");
+      console.log(json);
+    }
+  });
+  $('#editModal').modal('hide');
+  // Предотвращаем перезагрузку страницы
+  event.preventDefault();
+  return false;
 });
+
 
 
 $('#editModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
-  var tbl_select = document.getElementById('tbl-select');
 
   var edit_form = document.getElementById('edit-form');
   edit_form.innerHTML = "";
 
-  var hidden = document.createElement("INPUT");
-  edit_form.appendChild(hidden);
-  hidden.setAttribute("type", "hidden");
-  hidden.setAttribute("name", "db_table");
-  hidden.value = tbl_select.value;
+  var hidden1 = document.createElement("INPUT");
+  edit_form.appendChild(hidden1);
+  hidden1.setAttribute("type", "hidden");
+  hidden1.setAttribute("name", "db_table");
+  hidden1.value = tbl_select.value;
+
+  var hidden2 = document.createElement("INPUT");
+  edit_form.appendChild(hidden2);
+  hidden2.setAttribute("type", "hidden");
+  hidden2.setAttribute("name", "index");
+  hidden2.value = headers[0];
 
   for (var k = 0; k < headers.length; k++) {
     var form_group = document.createElement("DIV");
@@ -124,14 +159,15 @@ $('#editModal').on('show.bs.modal', function (event) {
 
     form_group.appendChild(input);
     input.classList.add("form-control");
+    input.setAttribute("type", "text");
     input.setAttribute("id", headers[k]);
+    input.setAttribute("name", headers[k]);
     input.value = values[button.data("id")][k];
   }
 })
 
 $('#newModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
-  var tbl_select = document.getElementById('tbl-select');
 
   var new_form = document.getElementById('new-form');
   new_form.innerHTML = "";

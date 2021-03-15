@@ -2,27 +2,40 @@
 
 require "db_connect.php";
 
-try {
-  $link = new PDO("mysql:host=$host;dbname=$db;charset=UTF8", $user, $pass);
-} catch (PDOException $e) {
-  die($e->getMessage());
-}
-
 $output = array();
 
-header('Content-Type: application/json');
+// Очистка буфера
+ob_end_clean();
 
-$query_str = "UPDATE " . $_GET['db_table'] . " SET";
+//header('Content-Type: application/json');
 
-foreach ($arr as $key => $value) {
-    echo "Key: $key; Value: $value<br />\n";
+$table =  $_POST['db_table'];
+$index = $_POST['index'];
+
+$query_str = "UPDATE " . $table . " SET (" ;
+
+foreach ($_POST as $key => $value) {
+  if ($value == "") continue;
+  
+  if ($key != $table && $key != $index) $query_str .= $key . "=" . $value . " ";
 }
 
-$stmt = $link->query("SHOW COLUMNS FROM " . $_GET['tbl']);
-while ($row = $stmt->fetch())
-{
-  $output[] = $row;
-}
+$query_str .= ") WHERE " . $index . "=" . $_POST[$index];
 
-echo json_encode($output);
+//try {
+//$link = new PDO("mysql:host=$host;dbname=$db;charset=UTF8", $user, $pass);
+//$stmt = $link->query($query_str);
+
+//while ($row = $stmt->fetch())
+//{
+//$output[] = $stmt;
+//}
+
+//} catch (PDOException $e) {
+//  $output[] = $query_str . "<br>" . $e->getMessage();
+//}
+
+//echo json_encode($output);
+//echo json_encode($output);
+echo $query_str;
 exit;

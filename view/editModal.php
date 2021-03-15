@@ -8,13 +8,13 @@
         </button>
       </div>
       <div class="modal-body">
-        
-        <form id="edit-form">
+
+        <form id="edit-form" method="POST">
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-        <button type="submit" form="edit-form" class="btn btn-primary">Сохранить</button>
+        <button class="btn btn-primary" type="submit" id="edit-form-submit" form="edit-form">Сохранить</button>
       </div>
     </div>
   </div>
