@@ -12,30 +12,26 @@ ob_end_clean();
 $table =  $_POST['db_table'];
 $index = $_POST['index'];
 
-$query_str = "UPDATE " . $table . " SET (" ;
+$query_str = "UPDATE " . $table . " SET " ;
 
 foreach ($_POST as $key => $value) {
   if ($value == "") continue;
-  
-  if ($key != $table && $key != $index) $query_str .= $key . "=" . $value . " ";
+
+  if ($key != 'db_table' && $key != $index && $value != $index) {
+    $query_str .= $key . "='" . $value . "',";
+  }
 }
 
-$query_str .= ") WHERE " . $index . "=" . $_POST[$index];
+$query_str = substr($query_str,0,-1);
 
-//try {
-//$link = new PDO("mysql:host=$host;dbname=$db;charset=UTF8", $user, $pass);
-//$stmt = $link->query($query_str);
+$query_str .= " WHERE " . $index . "=" . $_POST[$index];
 
-//while ($row = $stmt->fetch())
-//{
-//$output[] = $stmt;
-//}
+try {
+  $link = new PDO("mysql:host=$host;dbname=$db;charset=UTF8", $user, $pass);
+  $stmt = $link->query($query_str);
+} catch (PDOException $e) {
+  $output[] = $query_str . "<br>" . $e->getMessage();
+}
 
-//} catch (PDOException $e) {
-//  $output[] = $query_str . "<br>" . $e->getMessage();
-//}
-
-//echo json_encode($output);
-//echo json_encode($output);
-echo $query_str;
+echo $output;
 exit;
