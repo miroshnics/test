@@ -7,7 +7,6 @@ var values = new Array();
 
 // Загрузка списка таблиц выбранной БД
 window.addEventListener("load",function() {
-  var tbl_select = document.getElementById('tbl-select');
 
   $.ajax({
     url: 'connect.php',
@@ -92,38 +91,48 @@ function get_table_content() {
 
         var del_btn = document.createElement("BUTTON");
         td_edit_del.appendChild(del_btn);
-        del_btn.classList.add("btn", "btn-outline-danger");
+        del_btn.classList.add("btn", "btn-outline-danger", "del-btn");
         del_btn.setAttribute("type", "button");
         del_btn.innerHTML = "Удалить";
+        del_btn.setAttribute("data-id", i);
+        del_btn.addEventListener('click', del_func);
       }
     }
   });
 }
 
 
-document.getElementById('edit-form').addEventListener("submit",function() {
+
+function del_func() {
+  var id = this.getAttribute("data-id");
+  //alert(id);
+  var attr = "";
+  attr += "db_table=" + tbl_select.value + "&";
+  //query = "DELETE FROM " + tbl_select.value + " WHERE ";
+  for (var i = 0; i < headers.length; i++) {
+    if (values[id][i] == "" || values[id][i] == null) continue;
+    attr += headers[i] + "=" + values[id][i] + "&";
+  }
+  attr = attr.slice(0, -1);
+
   $.ajax({
-    url: "update.php",
+    url: "delete.php",
     type: 'POST',
     method: 'POST',
-    data: $("#edit-form").serialize(),  // Сериализуем объект
+    data: attr,
     dataType: 'text',
-    //dataType: 'json',
-    success: function(json){
+    success: function(response){
       console.log("success!");
-      console.log(json);
+      console.log(response);
       get_table_content();
     },
-    error: function(json){
+    error: function(response){
       console.log("error!");
-      console.log(json);
+      console.log(response);
+      get_table_content();
     }
   });
-  $('#editModal').modal('hide');
-  // Предотвращаем перезагрузку страницы
-  event.preventDefault();
-  return false;
-});
+}
 
 
 
@@ -166,29 +175,31 @@ $('#editModal').on('show.bs.modal', function (event) {
   }
 })
 
-document.getElementById('new-form').addEventListener("submit",function() {
+
+document.getElementById('edit-form').addEventListener("submit",function() {
   $.ajax({
-    url: "insert.php",
+    url: "update.php",
     type: 'POST',
     method: 'POST',
-    data: $("#new-form").serialize(),  // Сериализуем объект
+    data: $("#edit-form").serialize(),  // Сериализуем объект
     dataType: 'text',
     //dataType: 'json',
-    success: function(json){
+    success: function(response){
       console.log("success!");
-      console.log(json);
+      console.log(response);
       get_table_content();
     },
-    error: function(json){
+    error: function(response){
       console.log("error!");
-      console.log(json);
+      console.log(response);
     }
   });
-  $('#newModal').modal('hide');
+  $('#editModal').modal('hide');
   // Предотвращаем перезагрузку страницы
   event.preventDefault();
   return false;
 });
+
 
 $('#newModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
@@ -220,3 +231,26 @@ $('#newModal').on('show.bs.modal', function (event) {
     input.setAttribute("name", headers[k]);
   }
 })
+
+document.getElementById('new-form').addEventListener("submit",function() {
+  $.ajax({
+    url: "insert.php",
+    type: 'POST',
+    method: 'POST',
+    data: $("#new-form").serialize(),  // Сериализуем объект
+    dataType: 'text',
+    success: function(response){
+      console.log("success!");
+      console.log(response);
+      get_table_content();
+    },
+    error: function(response){
+      console.log("error!");
+      console.log(response);
+    }
+  });
+  $('#newModal').modal('hide');
+  // Предотвращаем перезагрузку страницы
+  event.preventDefault();
+  return false;
+});
