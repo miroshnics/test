@@ -166,17 +166,41 @@ $('#editModal').on('show.bs.modal', function (event) {
   }
 })
 
+document.getElementById('new-form').addEventListener("submit",function() {
+  $.ajax({
+    url: "insert.php",
+    type: 'POST',
+    method: 'POST',
+    data: $("#new-form").serialize(),  // Сериализуем объект
+    dataType: 'text',
+    //dataType: 'json',
+    success: function(json){
+      console.log("success!");
+      console.log(json);
+      get_table_content();
+    },
+    error: function(json){
+      console.log("error!");
+      console.log(json);
+    }
+  });
+  $('#newModal').modal('hide');
+  // Предотвращаем перезагрузку страницы
+  event.preventDefault();
+  return false;
+});
+
 $('#newModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget);
 
   var new_form = document.getElementById('new-form');
   new_form.innerHTML = "";
 
-  var hidden = document.createElement("INPUT");
-  new_form.appendChild(hidden);
-  hidden.setAttribute("type", "hidden");
-  hidden.setAttribute("name", "db_table");
-  hidden.value = tbl_select.value;
+  var hidden1 = document.createElement("INPUT");
+  new_form.appendChild(hidden1);
+  hidden1.setAttribute("type", "hidden");
+  hidden1.setAttribute("name", "db_table");
+  hidden1.value = tbl_select.value;
 
   for (var k = 0; k < headers.length; k++) {
     var form_group = document.createElement("DIV");
@@ -193,5 +217,6 @@ $('#newModal').on('show.bs.modal', function (event) {
     form_group.appendChild(input);
     input.classList.add("form-control");
     input.setAttribute("id", headers[k]);
+    input.setAttribute("name", headers[k]);
   }
 })

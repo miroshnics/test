@@ -8,13 +8,13 @@
         </button>
       </div>
       <div class="modal-body">
-        
+
         <form id="new-form">
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-        <button type="submit" form="new-form" class="btn btn-primary">Добавить</button>
+        <button type="submit" form="new-form" class="btn btn-primary"id="new-form-submit" form=new-form">Добавить</button>
       </div>
     </div>
   </div>
